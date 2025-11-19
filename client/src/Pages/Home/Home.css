@@ -1,0 +1,9 @@
+.home-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: url("/bg_img.png");
+    background-size: cover;
+   background-position: center;
+}
