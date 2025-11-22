@@ -17,13 +17,16 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+     axios.defaults.withCredentials=true;
+     
     const onSubmitHandler = async(e)=>{
         try {
             e.preventDefault();
-            axios.defaults.withCredentials=true;
+           
             if(state==='Sign Up'){
-                const {data} = await axios.post(backendUrl + '/api/auth/signup', {name,email,password});
+                const {data} = await axios.post(backendUrl + '/api/auth/signup', {name,email,password},{ withCredentials: true });
                 if(data.success){
+                    toast.success("Sign Up successfully!");
                     setIsLoggedin(true);
                     getUserData();
                     navigate('/')
@@ -33,8 +36,9 @@ const Login = () => {
                 }
             }
             else{
-                 const {data} = await axios.post(backendUrl + '/api/auth/login', {email,password});
+                 const {data} = await axios.post(backendUrl + '/api/auth/login', {email,password},{ withCredentials: true });
                 if(data.success){
+                    toast.success("Logged in successfully!");
                     setIsLoggedin(true);
                     getUserData();
                     navigate('/')
