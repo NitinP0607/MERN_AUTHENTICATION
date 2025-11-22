@@ -13,11 +13,24 @@ const port = process.env.PORT || 4000;
 //database coonection
 connectDB();
 
-const allowedOrigins = ['http://localhost:5173']
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174", 
+  "http://localhost:5175", // optional
+  "https://mern-authentication-frontend.onrender.com", // your deployed frontend (add when ready)
+];
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({origin: allowedOrigins, credentials:true}));
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("CORS blocked: " + origin));
+  },
+  credentials: true
+}));
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
