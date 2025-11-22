@@ -19,12 +19,15 @@ export const signup = async (req, res) => {
         await user.save();
 
         const token = JsonWebToken.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        res.cookie('token', token, {
+
+        const isDev = process.env.NODE_ENV === "development";
+
+        res.cookie("token", token, {
             httpOnly: true,
-            secure: true,            // Render requires secure cookies
-            sameSite: "none",
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        });
+            secure: isDev ? false : true,   // false in dev, true in production
+            sameSite: isDev ? "lax" : "none",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        })
 
         //sending welcome email
         const mailOptions = {
@@ -57,12 +60,16 @@ export const login = async (req, res) => {
             return res.json({ success: false, message: 'Password is not valid' })
         }
         const token = JsonWebToken.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-        res.cookie('token', token, {
+
+        const isDev = process.env.NODE_ENV === "development";
+
+        res.cookie("token", token, {
             httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        });
+            secure: isDev ? false : true,   // false in dev, true in production
+            sameSite: isDev ? "lax" : "none",
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        })
+
         return res.json({ success: true });
     } catch (error) {
         return res.json({ success: false, message: error.message });
