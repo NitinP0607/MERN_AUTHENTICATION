@@ -23,15 +23,7 @@ const allowedOrigins = [
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error("CORS blocked: " + origin));
-  },
-  credentials: true
-}));
+app.use(cors({ origin: true, credentials: true }));
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
