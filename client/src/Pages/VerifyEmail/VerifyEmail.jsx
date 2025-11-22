@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import "./VerifyEmail.css"
 import { assets } from '../../assets/assets'
 import { useNavigate } from 'react-router-dom'
@@ -57,6 +57,9 @@ const VerifyEmail = () => {
       toast.success(error.message)
     }
   }
+  useEffect(()=>{
+    isLoggedin && userData && userData.isAccountVerified && navigate('/')
+  },[isLoggedin, userData])
 
   return (
     <div className='email-verify'>

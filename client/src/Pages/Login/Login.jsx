@@ -91,12 +91,12 @@ const Login = () => {
                         </div>
 
                         <p onClick={()=>navigate('/reset-password')} className='forget-password'>Forget password .?</p>
-                        <button>{state}</button>
+                        <button className='login-signup-btn'>{state}</button>
                     </form>
                     {state == 'Sign Up' ? (
                         <p onClick={() => setState('Login')}
                             className='already-account-login'>Already have an account
-                            <span> Login here</span></p>
+                                <span>   Login here</span></p>
                     )
                         :
                         (<p onClick={() => setState('Sign Up')}

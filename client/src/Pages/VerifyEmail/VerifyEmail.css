@@ -1,6 +1,7 @@
 .email-verify {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh;
+    
     background: linear-gradient(90deg, rgb(153, 180, 101) 0%, rgb(110, 110, 163) 35%, rgba(0, 212, 255, 1) 100%);
 
 }
@@ -12,17 +13,20 @@
 }
 
 .email-verify-container {
-    width: 100%;
-    height: 100%;
+
+    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .email-verify-form {
-    width: 50%;
+    width: 90%;
+    /* mobile responsive */
+    max-width: 400px;
     background: #303332;
-    padding: 30px;
+    padding: 20px;
+    
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
@@ -65,4 +69,13 @@
     background: #2f67c2;
     background: linear-gradient(90deg, rgb(61, 74, 95) 0%, rgb(59, 59, 94) 35%, rgba(0, 212, 255, 1) 100%);
 
+}
+
+@media (min-width: 300px) and (max-width: 768px) {
+    .email-verify {
+        width: 100%;
+    }
+    .email-verify-form {
+        width: 95%;
+    }
 }
