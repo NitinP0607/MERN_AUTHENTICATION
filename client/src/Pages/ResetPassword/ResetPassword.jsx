@@ -33,6 +33,7 @@ const ResetPassword = () => {
       inputRefs.current[index - 1].focus();
     }
   }
+
   const handlePaste = (e) => {
     const paste = e.clipboardData.getData('text')
     const pasteArray = paste.split('');

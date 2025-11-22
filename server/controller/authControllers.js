@@ -21,8 +21,8 @@ export const signup = async (req, res) => {
         const token = JsonWebToken.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'developement',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            secure: true,            // Render requires secure cookies
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
@@ -59,8 +59,8 @@ export const login = async (req, res) => {
         const token = JsonWebToken.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'developement',
-            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000
         });
         return res.json({ success: true });
@@ -86,9 +86,9 @@ export const logout = async (req, res) => {
 
 export const sendVerifyOtp = async (req, res) => {
     try {
-        const { email  } = req.body;
+        const { email } = req.body;
 
-        const user = await userModel.findOne({email});
+        const user = await userModel.findOne({ email });
 
         if (user.isAccountVerified) {
             return res.json({ success: false, message: "Account already verified" })
@@ -118,7 +118,7 @@ export const verifyEmail = async (req, res) => {
         return res.json({ success: false, message: "Missing details" })
     }
     try {
-        const user = await userModel.findOne({email});
+        const user = await userModel.findOne({ email });
         if (!user) {
             return res.json({ success: false, message: "User not found" });
         }
