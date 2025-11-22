@@ -15,22 +15,30 @@ connectDB();
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "http://localhost:5174", 
+  "http://localhost:5174",
   "http://localhost:5175", // optional
-  "https://mern-authentication-frontend.onrender.com", 
+  "https://mern-authentication-frontend.onrender.com",
   "https://mern-authentication-weld-beta.vercel.app" // your deployed frontend (add when ready)
 ];
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("CORS blocked: " + origin));
+  },
+  credentials: true
+}));
 
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 
-app.get("/",(req,res)=>{
-    res.send("API is Working")
+app.get("/", (req, res) => {
+  res.send("API is Working")
 })
-app.listen(port,()=>{
-    console.log(`Server started on Port ${port}`);
+app.listen(port, () => {
+  console.log(`Server started on Port ${port}`);
 })
