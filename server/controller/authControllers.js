@@ -29,6 +29,8 @@ export const signup = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000,
         })
 
+        return res.json({ success: true, message: 'Account created successfully' })
+        
         //sending welcome email
         const mailOptions = {
             from: process.env.SENDER_EMAIL,
@@ -36,9 +38,11 @@ export const signup = async (req, res) => {
             subject: 'Welcome to N-technologies',
             text: `Welcome to N-technologies. Your account has been create with email id: ${email}`
         }
-        await transporter.sendMail(mailOptions);
+         
 
-        return res.json({ success: true, message: 'Account created successfully' })
+        transporter.sendMail(mailOptions).catch(err => console.log("Email error:", err));
+
+       
 
     } catch (error) {
         res.json({ success: false, message: error.message })
