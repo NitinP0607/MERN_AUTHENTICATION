@@ -18,6 +18,7 @@ const allowedOrigins = [
   "http://localhost:5174",
   "http://localhost:5175", // optional
   "https://mern-authentication-frontend.onrender.com",
+  "https://mern-authentication-4bj0zze4s-nitin-s-projects-5374f75d.vercel.app",
   "https://mern-authentication-weld-beta.vercel.app" // your deployed frontend (add when ready)
 ];
 
