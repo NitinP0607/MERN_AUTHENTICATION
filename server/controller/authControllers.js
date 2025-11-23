@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import JsonWebToken from 'jsonwebtoken';
 import userModel from '../model/userModel.js';
 import transporter from '../config/nodemailer.js'
+import apiInstance from "../config/brevoClient.js";
 
 //Signup  logic
 export const signup = async (req, res) => {
@@ -31,24 +32,23 @@ export const signup = async (req, res) => {
 
        
 
-        //sending welcome email
-        const mailOptions = {
-            from: process.env.SENDER_EMAIL,
-            to: user.email,
-            subject: 'Welcome to N-technologies',
-            text: `Welcome to N-technologies. Your account has been create with email id: ${email}`
-        }
-         
+         // Send welcome email using Brevo REST API
+        const welcomeEmail = {
+            sender: { name: "N-Technologies", email: process.env.SENDER_EMAIL },
+            to: [{ email: user.email }],
+            subject: "Welcome to N-Technologies",
+            textContent: `Welcome, ${name}! Your account has been created with email: ${email}.`,
+        };
 
-        
-         transporter.sendMail(mailOptions).catch(err => console.log("Email error:", err));
-         return res.json({ success: true, message: 'Account created successfully' })
-       
+        apiInstance.sendTransacEmail(welcomeEmail)
+            .then(() => console.log("Welcome email sent"))
+            .catch((err) => console.log("Email error:", err));
 
     } catch (error) {
-        res.json({ success: false, message: error.message })
+        return res.json({ success: false, message: error.message });
     }
-}
+};
+
 //Login Logic
 export const login = async (req, res) => {
     const { email, password } = req.body;
@@ -109,19 +109,26 @@ export const sendVerifyOtp = async (req, res) => {
         user.verifyOtp = Otp;
         user.verifyOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
         await user.save();
-        const mailOption = {
-            from: process.env.SENDER_EMAIL,
-            to: user.email,
-            subject: 'Account verification otp',
-            text: `Your OTP is ${Otp}, Verify your account using this otp`
-        }
-        await transporter.sendMail(mailOption);
-        res.json({ success: true, message: 'Verification OTP sent on Email' })
+
+         // Prepare email content for Brevo API
+        const verifyEmail = {
+            sender: { name: "N-Technologies", email: process.env.SENDER_EMAIL },
+            to: [{ email: user.email }],
+            subject: "Account Verification OTP",
+            textContent: `Your OTP is ${Otp}. It is valid for 24 hours.`,
+        };
+
+        // Send OTP email using Brevo REST API
+        apiInstance.sendTransacEmail(verifyEmail)
+            .then(() => console.log("Verification OTP email sent"))
+            .catch((err) => console.log("Email Error:", err));
+
+        return res.json({ success: true, message: "Verification OTP sent on Email" });
 
     } catch (error) {
-        return res.json({ success: false, message: error.message })
+        return res.json({ success: false, message: error.message });
     }
-}
+};
 
 export const verifyEmail = async (req, res) => {
     const { email, Otp } = req.body;
@@ -182,18 +189,31 @@ export const sendResetOtp = async (req, res) => {
         user.resetOtpExpireAt = Date.now() + 24 * 60 * 60 * 1000;
         await user.save();
 
-        const mailOptions = {
-            from: process.env.SENDER_EMAIL,
-            to: user.email,
-            subject: 'Password reset OTP',
-            text: `This is your Otp for forget your password: ${Otp}, use this OTP to proceed`
-        }
-        await transporter.sendMail(mailOptions);
-        return res.json({ success: true, message: "OTP sent to your email" })
+         // Brevo REST API email content
+        const resetEmail = {
+            sender: { name: "N-Technologies", email: process.env.SENDER_EMAIL },
+            to: [{ email: user.email }],
+            subject: "Password Reset OTP",
+            textContent: `Your OTP to reset password is: ${Otp}. It is valid for 24 hours.`
+        };
+
+        // Send email in background (non-blocking)
+        apiInstance.sendTransacEmail(resetEmail)
+            .then(() => console.log("Reset OTP email sent"))
+            .catch(err => console.log("Email Error:", err));
+
+        return res.json({
+            success: true,
+            message: "OTP sent to your email"
+        });
+
     } catch (error) {
-        return res.json({ success: false, message: error.message })
+        return res.json({
+            success: false,
+            message: error.message
+        });
     }
-}
+};
 
 //reset user password
 
