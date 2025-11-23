@@ -40,9 +40,11 @@ export const signup = async (req, res) => {
             textContent: `Welcome, ${name}! Your account has been created with email: ${email}.`,
         };
 
-        apiInstance.sendTransacEmail(welcomeEmail)
+         await apiInstance.sendTransacEmail(welcomeEmail)
             .then(() => console.log("Welcome email sent"))
             .catch((err) => console.log("Email error:", err));
+
+            res.json({ success: true, message: "Account created successfully" });
 
     } catch (error) {
         return res.json({ success: false, message: error.message });
