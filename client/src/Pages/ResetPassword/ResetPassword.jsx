@@ -17,7 +17,7 @@ const ResetPassword = () => {
   const [email, setEmail] = useState('');
   const [newpassword, setNewPassword] = useState('');
   const [isEmailSent, setIsEmailSent] = useState('')
-  const [otp, setOtp] = useState(0)
+  const [otp, setOtp] = useState("")
   const [isOtpSubmitted, setIsOtpSubmitted] = useState(false)
 
   const inputRefs = React.useRef([])
@@ -70,13 +70,14 @@ const ResetPassword = () => {
 
   const onSubmitNewPassword = async (e) => {
     e.preventDefault();
-    
+
     try {
       const { data } = await axios.post(backendUrl + '/api/auth/reset-password', {
-         email, 
-         otp,
-         newpassword })
-      data.success ? toast.success(data.success) : toast.error(data.message)
+        email,
+        Otp: otp,
+        newPassword: newpassword
+      })
+      data.success ? toast.success(data.message) : toast.error(data.message)
       data.success && navigate('/login')
     } catch (error) {
       toast.error(error.message)

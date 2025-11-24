@@ -148,7 +148,7 @@ export const verifyEmail = async (req, res) => {
         }
 
         if (user.verifyOtpExpireAt < Date.now()) {
-            return res.json({ success: "false", message: "OTP expired" })
+            return res.json({ success: false, message: "OTP expired" })
         }
 
         user.isAccountVerified = true;
@@ -175,7 +175,6 @@ export const isAuthenticated = async (req, res) => {
 }
 
 // password reset OTP
-
 export const sendResetOtp = async (req, res) => {
     const { email } = req.body;
     if (!email) {
@@ -220,9 +219,9 @@ export const sendResetOtp = async (req, res) => {
 //reset user password
 
 export const resetPassword = async (req, res) => {
-    const { email, otp, newPassword } = req.body;
+    const { email, Otp, newPassword } = req.body;
 
-    if (!email || !otp || !newPassword) {
+    if (!email || !Otp || !newPassword) {
         return res.json({ success: false, message: "Mising Details" })
     }
     try {
@@ -230,11 +229,11 @@ export const resetPassword = async (req, res) => {
         if (!user) {
             return res.json({ success: false, message: "user not found" })
         }
-        if (user.resetOtp == "" || user.resetOtp !== otp) {
+        if (user.resetOtp === "" || user.resetOtp !== Otp) {
             return res.json({ success: false, message: "Invalid Otp" })
         }
         if (user.resetOtpExpireAt < Date.now()) {
-            return res.json({ success: true, message: "OTP expired" })
+            return res.json({ success: false, message: "OTP expired" })
         }
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         user.password = hashedPassword;
