@@ -65,8 +65,12 @@
 .verify-email-btn {
     width: 100%;
     padding: 15px;
+    border-radius: 25px;
+    outline: none;
+    border: none;
+    color: white;
     font-weight: 500;
-    background: #2f67c2;
+    background: #7489aa;
     background: linear-gradient(90deg, rgb(61, 74, 95) 0%, rgb(59, 59, 94) 35%, rgba(0, 212, 255, 1) 100%);
 
 }
